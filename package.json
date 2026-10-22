@@ -1,0 +1,25 @@
+
+{
+  "name": "healthcare-fiu",
+  "version": "1.0.0",
+  "description": "A centralized directory of healthcare resources for FIU students and faculty",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "FIU",
+    "healthcare",
+    "student-resources"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^18.0.8",
+    "express": "^5.3.0",
+    "mongodb": "^7.7.0"
+  }
+}
+

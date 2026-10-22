@@ -1,0 +1,397 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Care for FIU</title>
+
+    <style>
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --navy: #081e3f;
+    --navy-light: #12345b;
+    --gold: #d8a928;
+    --gold-light: #fff4d6;
+    --background: #f5f7fb;
+    --white: #ffffff;
+    --text: #263449;
+    --muted: #637188;
+    --border: #dce3ed;
+    --teal: #087f73;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+header {
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: var(--white);
+    padding: 48px 20px 42px;
+    text-align: center;
+    border-bottom: 5px solid var(--gold);
+}
+
+header h1 {
+    margin: 0 0 10px;
+    font-size: clamp(30px, 4vw, 42px);
+    letter-spacing: -0.7px;
+}
+
+header p {
+    margin: 0;
+    color: #e1e9f4;
+    font-size: 17px;
+}
+
+main {
+    max-width: 1100px;
+    margin: 38px auto;
+    padding: 0 24px;
+}
+
+.search-panel {
+    background: var(--white);
+    padding: 26px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(8, 30, 63, 0.06);
+    margin-bottom: 32px;
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+label {
+    display: block;
+    font-weight: 650;
+    margin-bottom: 8px;
+    color: var(--navy);
+    font-size: 14px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    font: inherit;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--white);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(8, 127, 115, 0.12);
+}
+
+#results-heading {
+    color: var(--navy);
+    font-size: 25px;
+    margin: 0 0 6px;
+}
+
+#status {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0 0 22px;
+}
+
+#results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 22px;
+}
+
+.resource-card {
+    background: var(--white);
+    padding: 25px;
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--gold);
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(8, 30, 63, 0.04);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.resource-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(8, 30, 63, 0.10);
+}
+
+.resource-card h3 {
+    color: var(--navy);
+    font-size: 19px;
+    line-height: 1.35;
+    margin: 8px 0 12px;
+}
+
+.resource-card p {
+    color: var(--muted);
+    font-size: 15px;
+    margin: 0 0 18px;
+}
+
+.category {
+    display: inline-block;
+    align-self: flex-start;
+    background: var(--gold-light);
+    color: #72500b;
+    padding: 5px 11px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.resource-card a {
+    display: inline-block;
+    align-self: flex-start;
+    margin-top: auto;
+    padding: 9px 14px;
+    background: var(--navy);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.resource-card a:hover {
+    background: var(--teal);
+}
+
+footer {
+    margin-top: 65px;
+    padding: 25px 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    background: var(--white);
+}
+
+@media (max-width: 600px) {
+    header {
+        padding: 35px 18px;
+    }
+
+    main {
+        margin: 24px auto;
+        padding: 0 16px;
+    }
+
+    .search-panel {
+        padding: 19px;
+    }
+
+    #results {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Health Care for FIU</h1>
+        <p>Find healthcare and support resources in one place.</p>
+    </header>
+
+    <main>
+        <section class="search-panel">
+            <div class="filters">
+                <div>
+                    <label for="search">Search resources</label>
+                    <input
+                        id="search"
+                        type="search"
+                        placeholder="Try food, health, counseling..."
+                    >
+                </div>
+
+                <div>
+                    <label for="category">Resource category</label>
+                    <select id="category">
+                        
+<option value="">All categories</option>
+<option value="student_health">Student Health</option>
+<option value="counseling">Counseling</option>
+<option value="food_assistance">Food Assistance</option>
+<option value="wellness">Wellness</option>
+<option value="insurance">Insurance</option>
+<option value="healthcare">Healthcare</option>
+<option value="basic_needs">Basic Needs</option>
+<option value="accessibility">Accessibility</option>
+<option value="pharmacy">Pharmacy</option>
+<option value="student_support">Student Support</option>
+
+                    </select>
+                </div>
+
+                <div>
+                    <label for="audience">Who is this for?</label>
+                    <select id="audience">
+                        <option value="">Everyone</option>
+                        <option value="students">Students</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="staff">Staff</option>
+                    </select>
+                </div>
+            </div>
+            <button id="reset-filters" type="button">Reset Filters</button>
+        </section>
+
+        <h2 id="results-heading">Available Resources</h2>
+        <p id="status">Loading resources...</p>
+        <section id="results"></section>
+    </main>
+.audience-label {
+    margin-top: auto;
+    margin-bottom: 16px;
+    padding: 10px 12px;
+    background: #f0f3f8;
+    border-radius: 8px;
+    color: #263449;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+    <footer>
+        Health Care for FIU · Resource directory
+    </footer>
+
+    <script>
+        const searchInput = document.getElementById("search");
+        const categorySelect = document.getElementById("category");
+        const audienceSelect = document.getElementById("audience");
+        const results = document.getElementById("results");
+        const status = document.getElementById("status");
+
+        let allResources = [];
+
+        async function loadResources() {
+            try {
+                const response = await fetch("/api/resources");
+
+                if (!response.ok) {
+                    throw new Error("Could not load resources.");
+                }
+
+                allResources = await response.json();
+                displayResources();
+            } catch (error) {
+                status.textContent =
+                    "Unable to load resources. Please check that the server is running.";
+            }
+        }
+
+        function displayResources() {
+            const term = searchInput.value.trim().toLowerCase();
+            const category = categorySelect.value;
+            const audience = audienceSelect.value;
+
+            const filtered = allResources.filter(resource => {
+                const searchableText = [
+                    resource.name,
+                    resource.description,
+                    resource.category,
+                    ...(resource.keywords || [])
+                ].join(" ").toLowerCase();
+
+                const matchesTerm = searchableText.includes(term);
+                const matchesCategory =
+                    !category || resource.category === category;
+                const matchesAudience =
+                    !audience || (resource.audience || []).includes(audience);
+
+                return matchesTerm && matchesCategory && matchesAudience;
+            });
+
+            results.replaceChildren();
+
+            status.textContent = filtered.length
+                ? `Showing ${filtered.length} resource(s).`
+                : "No matching resources found.";
+
+            filtered.forEach(resource => {
+                const card = document.createElement("article");
+                card.className = "resource-card";
+
+                const title = document.createElement("h3");
+                title.textContent = resource.name;
+
+                const categoryLabel = document.createElement("span");
+                categoryLabel.className = "category";
+                categoryLabel.textContent =
+                    resource.category.replaceAll("_", " ");
+
+                const description = document.createElement("p");
+                description.textContent = resource.description;
+
+                
+const audienceLabel = document.createElement("p");
+audienceLabel.className = "audience-label";
+
+const audienceNames = (resource.audience || []).map(person => {
+    const names = {
+        students: "Students",
+        faculty: "Faculty",
+        staff: "Staff"
+    };
+
+    return names[person.toLowerCase()] ||
+        person.charAt(0).toUpperCase() + person.slice(1);
+});
+
+audienceLabel.textContent = "Who can use this: " +
+    audienceNames.join(", ");
+
+card.append(categoryLabel, title, description, audienceLabel);
+
+                if (resource.website) {
+                    const link = document.createElement("a");
+                    link.href = resource.website;
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
+                    link.textContent = "Visit website";
+                    card.appendChild(link);
+                }
+
+                results.appendChild(card);
+            });
+        }
+
+        searchInput.addEventListener("input", displayResources);
+        categorySelect.addEventListener("change", displayResources);
+        audienceSelect.addEventListener("change", displayResources);
+document.getElementById("reset-filters").addEventListener("click", () => {
+    searchInput.value = "";
+    categorySelect.value = "";
+    audienceSelect.value = "";
+
+    displayResources();
+});
+        loadResources();
+    </script>
+</body>
+</html>
