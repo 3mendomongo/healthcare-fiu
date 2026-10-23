@@ -70,10 +70,28 @@ main {
 
 .filters {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: minmax(240px, 2fr) repeat(2, minmax(160px, 1fr));
+    gap: 16px;
+    align-items: end;
+}
+.filters > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
 }
 
+.filters input,
+.filters select {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+}
+
+.filters #clear-search {
+    align-self: flex-start;
+    margin-top: 4px;
+}
 label {
     display: block;
     font-weight: 650;
@@ -208,6 +226,66 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+#status {
+    margin: 16px 0;
+    padding: 10px 14px;
+    background-color: #f0f7ff;
+    color: #174a75;
+    border-left: 4px solid #2b78b8;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+#clear-search {
+    padding: 10px 14px;
+    background-color: #ffffff;
+    color: #174a75;
+    border: 1px solid #2b78b8;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#clear-search:hover {
+    background-color: #f0f7ff;
+}
+
+#clear-search:focus-visible {
+    outline: 2px solid #174a75;
+    outline-offset: 3px;
+}
+#reset-filters {
+    padding: 10px 14px;
+    background-color: #ffffff;
+    color: #174a75;
+    border: 1px solid #2b78b8;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#reset-filters:hover {
+    background-color: #f0f7ff;
+}
+
+#reset-filters:focus-visible {
+    outline: 2px solid #174a75;
+    outline-offset: 3px;
+}
+
+.search-control {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.search-control input {
+    width: 100%;
+    box-sizing: border-box;
+}
     </style>
 </head>
 
@@ -220,15 +298,14 @@ footer {
     <main>
         <section class="search-panel">
             <div class="filters">
-                <div>
-                    <label for="search">Search resources</label>
-                    <input
-                        id="search"
-                        type="search"
-                        placeholder="Try food, health, counseling..."
-                    >
-                </div>
-
+    <div class="search-control">
+    <label for="search">Search resources</label>
+    <input
+        id="search"
+        type="search"
+        placeholder="Try food, health, counseling..."
+    >
+</div>
                 <div>
                     <label for="category">Resource category</label>
                     <select id="category">
@@ -258,8 +335,12 @@ footer {
                     </select>
                 </div>
             </div>
-            <button id="reset-filters" type="button">Reset Filters</button>
-        </section>
+            </section>
+
+<div class="filter-actions">
+    <button type="button" id="clear-search">Clear Search</button>
+    <button id="reset-filters" type="button">Reset Filters</button>
+</div>
 
         <h2 id="results-heading">Available Resources</h2>
         <p id="status">Loading resources...</p>
@@ -282,6 +363,7 @@ footer {
 
     <script>
         const searchInput = document.getElementById("search");
+        const clearSearchButton = document.getElementById("clear-search");
         const categorySelect = document.getElementById("category");
         const audienceSelect = document.getElementById("audience");
         const results = document.getElementById("results");
@@ -300,9 +382,10 @@ footer {
                 allResources = await response.json();
                 displayResources();
             } catch (error) {
-                status.textContent =
-                    "Unable to load resources. Please check that the server is running.";
-            }
+    results.replaceChildren();
+    status.textContent =
+        "Unable to load resources. Please check your connection and try again.";
+}
         }
 
         function displayResources() {
@@ -318,7 +401,7 @@ footer {
                     ...(resource.keywords || [])
                 ].join(" ").toLowerCase();
 
-                const matchesTerm = searchableText.includes(term);
+                const matchesTerm = searchableText.includes(term.replace(/\s+/g, " "));
                 const matchesCategory =
                     !category || resource.category === category;
                 const matchesAudience =
@@ -329,9 +412,18 @@ footer {
 
             results.replaceChildren();
 
-            status.textContent = filtered.length
-                ? `Showing ${filtered.length} resource(s).`
-                : "No matching resources found.";
+            if (filtered.length > 0) {
+    status.textContent = `Showing ${filtered.length} resource(s).`;
+} else if (
+    searchInput.value.trim() ||
+    categorySelect.value ||
+    audienceSelect.value
+) {
+    status.textContent =
+        "No resources match your search or filters. Try different keywords or click Reset Filters.";
+} else {
+    status.textContent = "No resources are currently available.";
+}
 
             filtered.forEach(resource => {
                 const card = document.createElement("article");
@@ -382,6 +474,10 @@ card.append(categoryLabel, title, description, audienceLabel);
         }
 
         searchInput.addEventListener("input", displayResources);
+        clearSearchButton.addEventListener("click", () => {
+    searchInput.value = "";
+    displayResources();
+});
         categorySelect.addEventListener("change", displayResources);
         audienceSelect.addEventListener("change", displayResources);
 document.getElementById("reset-filters").addEventListener("click", () => {
