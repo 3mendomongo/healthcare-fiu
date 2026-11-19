@@ -145,14 +145,93 @@ select:focus {
     border-top: 4px solid var(--gold);
     border-radius: 14px;
     box-shadow: 0 4px 14px rgba(8, 30, 63, 0.04);
+
     display: flex;
     flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .resource-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 10px 24px rgba(8, 30, 63, 0.10);
+}
+
+/* Contact information */
+.resource-contact {
+    margin-top: auto;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 12px;
+    min-height: 80px;
+}
+
+/* Phone and email rows */
+.contact-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 24px;
+}
+
+/* Gold contact icons */
+.contact-icon {
+    color: #B58A36;
+    font-size: 19px;
+    width: 24px;
+    flex-shrink: 0;
+}
+
+/* Contact links */
+.contact-row a {
+    color: #081f41;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    text-decoration: none;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+
+/* Hover effect */
+.contact-row a:hover {
+    color: #B58A36;
+    background: transparent;
+    text-decoration: underline;
+}
+
+/* Full-width website button */
+.resource-card .website-button {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    align-self: stretch;
+
+    margin-top: 20px;
+    padding: 14px 18px;
+
+    background: #081f41;
+    color: white;
+    border-radius: 8px;
+
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+
+    transition: background 0.2s;
+}
+
+/* Space between contact info and website button */
+.resource-contact + .website-button {
+    margin-top: 20px;
+}
+
+.resource-card .website-button:hover {
+    background: #123b70;
 }
 
 .resource-card h3 {
@@ -286,6 +365,36 @@ footer {
     width: 100%;
     box-sizing: border-box;
 }
+
+/* Make phone numbers and emails look like text */
+.resource-card .contact-row a {
+    display: inline;
+    background: transparent;
+    color: #081f41;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+/* Change color when hovering */
+.resource-card .contact-row a:hover {
+    background: transparent;
+    color: #b58a36;
+    text-decoration: underline;
+}
+
+/* Make phone and email icons gold */
+.resource-card .contact-icon {
+    color: #b58a36;
+    font-size: 19px;
+    width: 24px;
+    flex-shrink: 0;
+}
+
     </style>
 </head>
 
@@ -460,14 +569,60 @@ audienceLabel.textContent = "Who can use this: " +
 
 card.append(categoryLabel, title, description, audienceLabel);
 
-                if (resource.website) {
-                    const link = document.createElement("a");
-                    link.href = resource.website;
-                    link.target = "_blank";
-                    link.rel = "noopener noreferrer";
-                    link.textContent = "Visit website";
-                    card.appendChild(link);
-                }
+
+const contactSection = document.createElement("div");
+contactSection.className = "resource-contact";
+
+// Display phone number only if available
+if (resource.phoneNumber) {
+    const phoneRow = document.createElement("div");
+    phoneRow.className = "contact-row";
+
+    const phoneLink = document.createElement("a");
+    phoneLink.href = `tel:${resource.phoneNumber}`;
+    phoneLink.textContent = resource.phoneNumber;
+
+const phoneIcon = document.createElement("span");
+phoneIcon.className = "contact-icon";
+phoneIcon.textContent = "☎";
+
+    phoneRow.append(phoneIcon, phoneLink);
+    contactSection.appendChild(phoneRow);
+}
+
+// Display email only if available
+if (resource.email) {
+    const emailRow = document.createElement("div");
+    emailRow.className = "contact-row";
+
+    const emailLink = document.createElement("a");
+    emailLink.href = `mailto:${resource.email}`;
+    emailLink.textContent = resource.email;
+
+const emailIcon = document.createElement("span");
+emailIcon.className = "contact-icon";
+emailIcon.textContent = "✉";
+
+    emailRow.append(emailIcon, emailLink);
+    contactSection.appendChild(emailRow);
+}
+
+// Only display contact section if information exists
+if (contactSection.children.length > 0) {
+    card.appendChild(contactSection);
+}
+
+                
+if (resource.website) {
+    const link = document.createElement("a");
+    link.href = resource.website;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Visit website";
+    link.className = "website-button";
+
+    card.appendChild(link);
+}
 
                 results.appendChild(card);
             });
